@@ -1,5 +1,5 @@
 import numpy as np
-from pyrec.evaluate.ranking_metric import *
+from lrec.evaluate.ranking_metric import *
 import multiprocessing as mp
 import time
 import scipy.sparse
