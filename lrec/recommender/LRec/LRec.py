@@ -19,9 +19,9 @@ class LRec(BaseLinear):
 
     def __getLearner(self):
         if self.arg.loss == "squared":
-            return Ridge(alpha=self.l2, fit_intercept=False, max_iter=40)
+            return Ridge(alpha=self.l2, fit_intercept=False, max_iter=20)
         elif self.arg.loss == "logistic":
-            return LogisticRegression(C=self.l2, fit_intercept=False,max_iter=40)
+            return LogisticRegression(C=self.l2, fit_intercept=False,max_iter=20)
         else:
             raise NotImplementedError(
                 "Model %s not implemented" % (self.arg.loss))
