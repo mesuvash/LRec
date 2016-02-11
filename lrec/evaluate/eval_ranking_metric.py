@@ -65,13 +65,13 @@ def evalMetrics(train, test, recos, mapk=100, ks=[3, 5, 10, 20]):
         else:
             reco_score = recos[user, :]
 
-        reco_score = np.ravel(reco_score__)
-#         reco_score = np.ravel(reco_score__)
+        reco_score = np.ravel(reco_score)
+#         reco_score = np.ravel(reco_score)
         history = train.getrow(user)
         history_index = history.indices[
             range(history.indptr[0], history.indptr[1])]
-        reco_score__[history_index] = float("-inf")
-        recommended = getTopK(reco_score__, mapk)
+        reco_score[history_index] = float("-inf")
+        recommended = getTopK(reco_score, mapk)
         user_purchased = getUserPurchased(test, user)
 
         _apk = apk(user_purchased, recommended, mapk)
@@ -139,7 +139,7 @@ def evalMetricsParallelMiniBatch(train_input, train_target, test, model,
         train_batch = train_target[batch_users, :]
         test_batch = test[batch_users, :]
         collector.running += 1
-        arg = (train_batch, test_batch, reco_score__, mapk, ks)
+        arg = (train_batch, test_batch, reco_score, mapk, ks)
         pool.apply_async(evalMetrics, args=arg, callback=collector.collect)
         while(collector.running >= nprocs):
             time.sleep(1)
@@ -170,8 +170,8 @@ def evalMetricsIterative(train_input, train_target, test, model, mapk=100, ks=[3
         history = train_target.getrow(user)
         history_index = history.indices[
             range(history.indptr[0], history.indptr[1])]
-        reco_score__[history_index] = float("-inf")
-        recommended = getTopK(reco_score__, mapk)
+        reco_score[history_index] = float("-inf")
+        recommended = getTopK(reco_score, mapk)
         user_purchased = getUserPurchased(test, user)
 
         _apk = apk(user_purchased, recommended, mapk)
