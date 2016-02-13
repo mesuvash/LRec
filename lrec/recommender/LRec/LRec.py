@@ -19,9 +19,9 @@ class LRec(BaseLinear):
 
     def __getLearner(self):
         if self.arg.loss == "squared":
-            return Ridge(alpha=self.l2, max_iter=40, tol=0.00001)
+            return Ridge(alpha=self.l2, fit_intercept=True)
         elif self.arg.loss == "logistic":
-            return LogisticRegression(C=self.l2, max_iter=40, tol=0.00001, class_weight="balanced")
+            return LogisticRegression(C=self.l2, class_weight="balanced", fit_intercept=True)
         else:
             raise NotImplementedError(
                 "Model %s not implemented" % (self.arg.loss))
@@ -32,7 +32,6 @@ class LRec(BaseLinear):
         models = []
         train_target = train_input.T
         train_input = train_input.T
-
         if target_indices is not None:
             train_target = train_target[:, target_indices]
         else:
@@ -50,9 +49,15 @@ class LRec(BaseLinear):
     def fit_parallel(self, train_input,
                      target_indices=None, num_procs=4,
                      batch_size=1000):
-        prunner = ParallelRunner(self, num_procs, batch_size)
-        indices, sim = prunner.fit(train_input)
-        self.sim = sim
+        if self.arg.loss == "squared_analytical":
+            sim = (np.linalg.inv((train_input * train_input.T + lamda *
+                                  scipy.sparse.identity(m)).todense()) * train_input * train_input.T)
+            indices = range(train_input.shape[0])
+            self.sim = sim
+        else:
+            prunner = ParallelRunner(self, num_procs, batch_size)
+            indices, sim = prunner.fit(train_input)
+            self.sim = sim
         return indices, self.sim
 
     def recommend_all(self, train_input):
