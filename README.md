@@ -1,17 +1,17 @@
-#LRec
+# LRec
 
-#Dependencies
+# Dependencies
 
     + envoy
     + progressbar
     + sklearn 0.17
     + Cython
 
-#Installation
+# Installation
 
     python setup.py install
 
-#Data Input
+# Data Input
 
     The data format is tab separated user-item-rating score
         <user>\t<item>\t<rating>
