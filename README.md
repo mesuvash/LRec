@@ -19,5 +19,8 @@
     Also, the different delimiter can be used by defining a custom parser or passind delim in UserItemRatingParser.
 
 # Running the code
-    please refer lrec.ipynb for step by step guide to run the code.
+
+    Please refer lrec.ipynb for step by step guide to run the code. The sample dataset(lastFM) is included in the data folder.
+
+
 
